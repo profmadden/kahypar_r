@@ -1,5 +1,5 @@
 fn main() {
-    cxx_build::bridge("src/main.rs")
+    cxx_build::bridge("src/lib.rs")
         .file("src/wrap.cc")
         .flag_if_supported("-std=c++14")
         .compile("cxxbridge-kahypar");
