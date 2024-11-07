@@ -22,6 +22,13 @@ extern "C" {
 */
 }
 
+pub fn kahypar_test() {
+    println!("Here we are with KaHyPar!");
+    unsafe {
+	kahypar_hello();
+    }
+}
+
 
 fn main() {
     println!("Hello, world!");
