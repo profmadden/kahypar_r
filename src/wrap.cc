@@ -4,9 +4,12 @@
 
 #include <libkahypar.h>
 
+static kahypar_context_t *context = NULL;
+
 int do_k() {
 
-  kahypar_context_t* context = kahypar_context_new();
+  // kahypar_context_t* context = kahypar_context_new();
+  context = kahypar_context_new();
   kahypar_configure_context_from_file(context, "/usr/local/etc/kahypar.ini");
   
   kahypar_set_seed(context, 42);
@@ -65,5 +68,15 @@ extern "C"
     printf("Hello world from KaHyPar.  Moved\n");
     printf("Pointer to the context is %p\n", context);
     do_k();
+  }
+  void kahypar_array(int *data, int len)
+  {
+    context = kahypar_context_new();
+    
+    printf("Array received, length %d\n", len);
+    for (int i = 0; i < len; ++i)
+    {
+      printf("  >> %d\n", data[i]);
+    }
   }
 }
