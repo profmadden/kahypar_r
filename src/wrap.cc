@@ -4,9 +4,11 @@
 
 #include <libkahypar.h>
 
+#define LDBG 0
+
 static kahypar_context_t *context = NULL;
 
-int do_k() {
+int test_partitioner() {
 
   // kahypar_context_t* context = kahypar_context_new();
   context = kahypar_context_new();
@@ -52,11 +54,15 @@ int do_k() {
                	    hyperedge_indices.get(), hyperedges.get(),
        	            &objective, context, partition.data());
 
+  printf("Finished partitioner call\n");
+  
+
   for(int i = 0; i != num_vertices; ++i) {
     std::cout << i << ":" << partition[i] << std::endl;
   }
 
   kahypar_context_free(context);
+  context = NULL;
 }
 
 
@@ -64,19 +70,45 @@ extern "C"
 {
   void kahypar_hello()
   {
-    kahypar_context_t* context = kahypar_context_new();
-    printf("Hello world from KaHyPar.  Moved\n");
-    printf("Pointer to the context is %p\n", context);
-    do_k();
+    printf("Testing the partitioner\n");
+    test_partitioner();
   }
-  void kahypar_array(int *data, int len)
+  
+  void partition(unsigned int nvtxs, unsigned int nhedges, int *hewt, int *vtw, unsigned long *eptr, unsigned int *eind, int *part)
   {
-    context = kahypar_context_new();
-    
-    printf("Array received, length %d\n", len);
-    for (int i = 0; i < len; ++i)
-    {
-      printf("  >> %d\n", data[i]);
-    }
+      if (context == NULL)
+      {
+        context = kahypar_context_new();
+        kahypar_configure_context_from_file(context, "/usr/local/etc/kahypar.ini");
+        kahypar_set_seed(context, 42);
+      }
+
+      if (LDBG) {
+      printf("Calling KAHYPAR %d vertices, %d edges\n", nvtxs, nhedges);
+      for (int i = 0; i < nvtxs; ++i)
+        printf("VTX %d weight %d\n", i, vtw[i]);
+
+      for (int i = 0; i < nhedges; ++i)
+      {
+        printf("eptr %d -- %d to %d\n", i, eptr[i], eptr[i + 1]);
+        for (int j = eptr[i]; j < eptr[i + 1]; ++j)
+        {
+          printf(" %d  ", eind[j]);
+        }
+        printf("\n");
+      }
+
+      printf("Context %p", context);
+      }
+
+      kahypar_hyperedge_weight_t objective = 0;
+
+      kahypar_partition(nvtxs, nhedges, 0.03, 2, vtw, NULL, eptr, eind, &objective, context, part);
+
+      if (LDBG) {
+      printf("Done with partitioning.  Result:\n");
+      for (int i = 0; i < nvtxs; ++i)
+        printf("%d  --- %d\n", i, part[i]);
+      }
   }
 }
