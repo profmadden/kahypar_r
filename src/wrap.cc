@@ -15,7 +15,7 @@ int test_partitioner() {
   kahypar_configure_context_from_file(context, "/usr/local/etc/kahypar.ini");
   
   kahypar_set_seed(context, 42);
-
+  const kahypar_hypernode_weight_t hnw = 4;
   const kahypar_hypernode_id_t num_vertices = 7;
   const kahypar_hyperedge_id_t num_hyperedges = 4;
 
@@ -74,7 +74,7 @@ extern "C"
     test_partitioner();
   }
   
-  void partition(unsigned int nvtxs, unsigned int nhedges, int *hewt, int *vtw, unsigned long *eptr, unsigned int *eind, int *part)
+  void partition(unsigned int nvtxs, unsigned int nhedges, int *hewt, int *vtw, size_t *eind, kahypar_hyperedge_id_t *eptr, int *part)
   {
       if (context == NULL)
       {
@@ -86,24 +86,30 @@ extern "C"
       if (LDBG) {
       printf("Calling KAHYPAR %d vertices, %d edges\n", nvtxs, nhedges);
       for (int i = 0; i < nvtxs; ++i)
-        printf("VTX %d weight %d\n", i, vtw[i]);
+        printf("VTX %d weight %d  initial partition %d\n", i, vtw[i], part[i]);
 
       for (int i = 0; i < nhedges; ++i)
       {
-        printf("eptr %d -- %d to %d\n", i, eptr[i], eptr[i + 1]);
-        for (int j = eptr[i]; j < eptr[i + 1]; ++j)
+        printf("eptr %d -- %d to %d\n", i, eind[i], eind[i + 1]);
+        for (int j = eind[i]; j < eind[i + 1]; ++j)
         {
-          printf(" %d  ", eind[j]);
+          printf(" %d  ", eptr[j]);
         }
         printf("\n");
       }
 
-      printf("Context %p", context);
+
+      printf("Context %p\n", context);
       }
 
       kahypar_hyperedge_weight_t objective = 0;
+      const double imbalance = 0.03;
+      const kahypar_partition_id_t k = 2;
 
-      kahypar_partition(nvtxs, nhedges, 0.03, 2, vtw, NULL, eptr, eind, &objective, context, part);
+      printf("---------------\n");
+
+
+      kahypar_partition(nvtxs, nhedges, imbalance, k, NULL, NULL, eind, eptr, &objective, context, part);
 
       if (LDBG) {
       printf("Done with partitioning.  Result:\n");
