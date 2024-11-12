@@ -141,7 +141,7 @@ extern "C"
     int bestpart = -1;
     int finalpart[nvtxs];
 
-    for (int pass = 0; pass < 10; ++pass) {
+    for (int pass = 0; pass < 2; ++pass) {
       kahypar_set_seed(context, (pass + 1) * 8675);
       int newpart[nvtxs];
       for (int i = 0; i < nvtxs; ++i)
