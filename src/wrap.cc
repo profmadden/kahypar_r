@@ -136,7 +136,7 @@ extern "C"
     const double imbalance = 0.01;
     const kahypar_partition_id_t k = 2;
 
-    printf("---------------\n");
+    // printf("---------------\n");
 
     int bestpart = -1;
     int finalpart[nvtxs];
