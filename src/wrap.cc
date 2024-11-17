@@ -4,7 +4,7 @@
 
 #include <libkahypar.h>
 
-#define LDBG 0
+#define LDBG 1
 
 static kahypar_context_t *context = NULL;
 
@@ -104,7 +104,7 @@ extern "C"
     return total;
   }
   
-  void partition(unsigned int nvtxs, unsigned int nhedges, int *hewt, int *vtw, size_t *eind, kahypar_hyperedge_id_t *eptr, int *part)
+  void partition(unsigned int nvtxs, unsigned int nhedges, int *hewt, int *vtw, size_t *eind, kahypar_hyperedge_id_t *eptr, int *part, int kway)
   {
     if (context == NULL)
     {
@@ -134,7 +134,7 @@ extern "C"
 
     kahypar_hyperedge_weight_t objective = 0;
     const double imbalance = 0.01;
-    const kahypar_partition_id_t k = 2;
+    const kahypar_partition_id_t k = kway;
 
     // printf("---------------\n");
 
