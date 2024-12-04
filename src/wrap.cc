@@ -4,7 +4,7 @@
 
 #include <libkahypar.h>
 
-#define LDBG 1
+#define LDBG 0
 
 static kahypar_context_t *context = NULL;
 
@@ -138,17 +138,34 @@ extern "C"
 
     // printf("---------------\n");
 
+    kahypar_hypergraph_t *hg = kahypar_create_hypergraph(k, nvtxs, nhedges, eind, eptr, hewt, vtw);
+#if 0    
+    int newpart[nvtxs];
+    for (int i = 0; i < nvtxs; ++i)
+        newpart[i] = -1;
+    newpart[0] = 1;
+    newpart[1] = 0;
+#endif
+    // printf("Calling the HG version\n");
+    kahypar_set_fixed_vertices(hg, part);
+    kahypar_partition_hypergraph(hg, k, imbalance, &objective, context, part);
+    
+#if 0
+    for (int i = 0; i < nvtxs; ++i)
+      part[i] = newpart[i];
+#endif
+    kahypar_hypergraph_free(hg);
+
+#if 0
     int bestpart = -1;
     int finalpart[nvtxs];
 
     for (int pass = 0; pass < 2; ++pass) {
       kahypar_set_seed(context, (pass + 1) * 8675);
-      int newpart[nvtxs];
-      for (int i = 0; i < nvtxs; ++i)
-        newpart[i] = part[i];
+
       kahypar_partition(nvtxs, nhedges, imbalance, k, NULL, NULL, eind, eptr, &objective, context, newpart);
       int cut = evaluate(nhedges, eind, eptr, newpart);
-      printf("C calculated cut %d\n", cut);
+      // printf("C calculated cut %d\n", cut);
       if ((bestpart < 0) || (cut < bestpart))
       {
         for (int i = 0; i < nvtxs; ++i)
@@ -164,5 +181,8 @@ extern "C"
     }
     for (int i = 0; i < nvtxs; ++i)
       part[i] = finalpart[i];
+     
+#endif  a     
   }
+
 }
