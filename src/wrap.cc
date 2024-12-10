@@ -104,7 +104,7 @@ extern "C"
     return total;
   }
   
-  void partition(unsigned int nvtxs, unsigned int nhedges, int *hewt, int *vtw, size_t *eind, kahypar_hyperedge_id_t *eptr, int *part, int kway)
+  void partition(unsigned int nvtxs, unsigned int nhedges, int *hewt, int *vtw, size_t *eind, kahypar_hyperedge_id_t *eptr, int *part, int kway, int passes, long seed)
   {
     if (context == NULL)
     {
