@@ -4,12 +4,19 @@
 #include <thread>
 
 #include <libkahypar.h>
+static kahypar_context_t *context = NULL;
+
+
+#if __has_include("disabled-libmtkahypar.h")
+#define HAS_MT 1
 #include <libmtkahypar.h>
+static mt_kahypar_context_t *mtcontext = NULL;
+#else
+#define HAS_MT 0
+#endif
 
 #define LDBG 0
 
-static kahypar_context_t *context = NULL;
-static mt_kahypar_context_t *mtcontext = NULL;
 
 int test_partitioner() {
 
@@ -85,10 +92,15 @@ extern "C"
   {
     printf("Testing the partitioner\n");
     test_partitioner();
+
+#if HAS_MT    
     printf("Testing to see if we can initialize for MT KAHYPAR\n");
     mt_kahypar_initialize_thread_pool(std::thread::hardware_concurrency(), true);
     mt_kahypar_context_t *context = mt_kahypar_context_new();
     printf("Found the MT context\n");
+#else
+    printf("MT-KaHyPar not available.\n");
+#endif
   }
 
   int evaluate(int num_edges, size_t *eind, kahypar_hyperedge_id_t *eptr, int *part)
@@ -111,8 +123,10 @@ extern "C"
     return total;
   }
 
+
   void mtpartition(unsigned int nvtxs, unsigned int nhedges, int *hewt, int *vtw, size_t *eind, kahypar_hyperedge_id_t *eptr, int *part, int kway, int passes, long seed)
   {
+ #if HAS_MT
     if (mtcontext == NULL)
     {
       printf("Loading in the MT-KAHYPAR context\n");
@@ -147,6 +161,11 @@ extern "C"
     mt_kahypar_free_hypergraph(hg);
     mt_kahypar_free_partitioned_hypergraph(phg);
     printf("Finished with the MT PARTITION call\n");
+#else
+  // kahypar_partition(nvtxs, nhedges, hewt, vtw, eind, eptr, part, kway, passes, seed);
+  printf("Error!  MT KaHyPar not available!");
+  exit(1);
+#endif
   }
 
   

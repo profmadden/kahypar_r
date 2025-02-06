@@ -5,6 +5,6 @@ fn main() {
         .compile("cxxbridge-kahypar");
     println!("cargo::rustc-link-search=/usr/local/lib");
     println!("cargo::rustc-link-lib=kahypar");
-    println!("cargo::rustc-link-lib=mtkahypar");
+    // println!("cargo::rustc-link-lib=mtkahypar");
     println!("cargo:rerun-if-changed=src/wrap.cc");
 }
