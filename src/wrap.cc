@@ -248,7 +248,7 @@ extern "C"
     for (int i = 0; i < nvtxs; ++i)
       part[i] = finalpart[i];
      
-#endif  a     
+#endif     
   }
 
 }

@@ -23,11 +23,3 @@ pub fn kahypar_test(data: Vec<i32>) {
 	kahypar_hello();
     }
 }
-
-
-fn main() {
-    println!("Hello, world!");
-    unsafe {
-	kahypar_hello();
-    }
-}
