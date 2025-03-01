@@ -9,6 +9,6 @@ cty = "0.2.2"
 cxx = "1.0.128"
 
 [build-dependencies]
-cc = "1.0"
+cc = "1.2.16"
 cxx-build = "1.0"
 
