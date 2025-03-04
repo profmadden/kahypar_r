@@ -176,8 +176,9 @@ extern "C"
     {
       context = kahypar_context_new();
       kahypar_configure_context_from_file(context, "/usr/local/etc/kahypar.ini");
-      kahypar_set_seed(context, 999);
+      // kahypar_set_seed(context, 999);
     }
+    kahypar_set_seed(context, seed);
 
     if (LDBG)
     {
