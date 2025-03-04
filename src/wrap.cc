@@ -178,7 +178,7 @@ extern "C"
       kahypar_configure_context_from_file(context, "/usr/local/etc/kahypar.ini");
       // kahypar_set_seed(context, 999);
     }
-    kahypar_set_seed(context, seed);
+    
 
     if (LDBG)
     {
@@ -214,6 +214,8 @@ extern "C"
     newpart[1] = 0;
 #endif
     // printf("Calling the HG version\n");
+
+    kahypar_set_seed(context, seed);
     kahypar_set_fixed_vertices(hg, part);
     kahypar_partition_hypergraph(hg, k, imbalance, &objective, context, part);
     
