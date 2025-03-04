@@ -170,7 +170,7 @@ extern "C"
 
   
   
-  void partition(unsigned int nvtxs, unsigned int nhedges, int *hewt, int *vtw, size_t *eind, kahypar_hyperedge_id_t *eptr, int *part, int kway, int passes, long seed)
+  void partition(unsigned int nvtxs, unsigned int nhedges, int *hewt, int *vtw, size_t *eind, kahypar_hyperedge_id_t *eptr, int *part, int kway, int passes, long seed, float imbalance)
   {
     if (context == NULL)
     {
@@ -200,7 +200,7 @@ extern "C"
     }
 
     kahypar_hyperedge_weight_t objective = 0;
-    const double imbalance = 0.01;
+    // const double imbalance = 0.01;
     const kahypar_partition_id_t k = kway;
 
     // printf("---------------\n");
@@ -217,7 +217,7 @@ extern "C"
 
     kahypar_set_seed(context, seed);
     kahypar_set_fixed_vertices(hg, part);
-    kahypar_partition_hypergraph(hg, k, imbalance, &objective, context, part);
+    kahypar_partition_hypergraph(hg, k, (double) imbalance, &objective, context, part);
     
 #if 0
     for (int i = 0; i < nvtxs; ++i)
